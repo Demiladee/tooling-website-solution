@@ -351,3 +351,111 @@ verifying that the process works on the other web servers
 
 ![](images/wsmntt12.png)
 
+### cloning the tooling source code from darey.io github account
+
+installing git
+
+`$sudo yum install git -y`
+
+![](images/wsgit14.png)
+
+`$git init`
+
+`$git clone`
+
+![](images/wsgitclonecopy15.png)
+
+deploying the tooling website's code to the webserver.
+
+`$cd tooling`
+
+confirming the html directory is there and copying it into /var/www/html
+
+`$sudo cp -R html/. /var/www/html`
+
+![](images/wsgitclonecopy15.png)
+
+opening tcp port 80 on the web server 
+
+![](images/wshttpinb16.png)
+
+confirming httpd is running
+
+`$ sudo systemctl status httpd`
+
+![](images/wshttpddead17.png)
+
+httpd is inactive so i'll disable selinux and edit the config file
+
+`$sudo sentenforce 0`
+
+`$sudo vi /etc/sysconfig/selinux`
+
+i set selinux=disabled and restarted httpd
+
+![](images/wshhtpdrunning18.png)
+
+![](images/wsselinux19.png)
+
+edited the website's configuration file to connect to the db 
+
+`$sudo vi /var/www/html/functions.php`
+
+![](images/wsviphp20.png)
+
+edited the db access info
+
+`$db = mysqli_connect('subnet-cidr', 'username', 'password', 'db-name');`
+
+![](images/wsfunctionsphp21.png)
+
+installed mysql 
+
+`$sudo yum install mysql -y`
+
+![](images/wsinstallmysql22.png)
+
+i edited the db server's inbound rule to allow access from the subnet-cidr
+
+![](images/dbsubnetciderinboound5.png)
+
+edited bind address to allow access from anywhere
+
+`$sudo vi /etc/mysql/mysql.conf.d/mysql.cnf`
+
+![](images/dbbindaddre7.png)
+
+restarted mysql 
+
+`$sudo systemctl restart mysql`
+
+![](images/dbmysqlconnected6.png)
+
+went back to the web server to confirm that the connection was allowed
+
+`mysql -h <database-private-ip> -u <db-username> -p <db-password> < tooling-db.sql
+
+![](images/wsconnectedmysql23.png)
+
+tested the db server to confirm my db and user are there
+
+`mysql show databases;`
+
+`mysql use tooling;`
+
+`mysql show tables;`
+
+`mysql select * from users;`
+
+![](images/dbtest8.png)
+
+created another user in mysql users table and granted all privileges
+
+![](images/dbfinal8.png)
+
+tested website 
+
+![](images/final1.png)
+
+![](images/final2.png)
+
