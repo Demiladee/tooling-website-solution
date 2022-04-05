@@ -351,7 +351,7 @@ verifying that the process works on the other web servers
 
 ![](images/wsmntt12.png)
 
-### cloning the tooling source code from darey.io github account
+### cloning the tooling source code from my github account
 
 installing git
 
@@ -361,7 +361,7 @@ installing git
 
 `$git init`
 
-`$git clone`
+`$git clone https://github.com/demiladee/tooling.git`
 
 ![](images/wsgitclonecopy15.png)
 
