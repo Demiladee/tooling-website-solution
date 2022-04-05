@@ -193,3 +193,41 @@ opening ports so client can access nfs:
 tcp 111, udp 111, tcp 2049, udp 2049
 
 ![](images/nfsinbound18.png)
+
+
+### configuring database server
+
+updating ubuntu
+
+`$sudo apt update -y`
+
+![](images/dbupdate1.png)
+
+installing mysql-server
+
+`$sudo apt install mysql-server -y`
+
+![](images/dbsqlserver2.png)
+
+verifying sql status
+
+`$sudo systemctl status mysql`
+
+![](images/dbsqlstatus3.png)
+
+populating db server with a database, a user and granting permission to the user
+
+`mysql create database tooling;`
+
+`mysql create user 'webaccess'@'subnet-cidr' identified by 'password';`
+
+`mysql grant all on tooling.* to 'webaccess'@'subnet-cidr';`
+
+`mysql flush privileges;`
+
+`mysql show databases;`
+
+`mysql exit`
+
+![](images/dbsqlsetup4.png)
+
