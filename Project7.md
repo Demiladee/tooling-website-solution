@@ -6,6 +6,10 @@ Launched 1 Ubuntu Linux distro - within the same subnet also - to serve as the D
 
 Attached an 8gb, 8gb & 10gb EBS volumes to the NFS server to be formatted and made into 3 lv's.
 
+
+## preparing nfs
+
+
 updating red hat
 
 `$sudo yum update -y`
@@ -195,7 +199,7 @@ tcp 111, udp 111, tcp 2049, udp 2049
 ![](images/nfsinbound18.png)
 
 
-### configuring database server
+## configuring database server
 
 updating ubuntu
 
@@ -230,4 +234,120 @@ populating db server with a database, a user and granting permission to the user
 `mysql exit`
 
 ![](images/dbsqlsetup4.png)
+
+
+## preparing web servers
+
+### everything done on 1 web server will be replicated on the other 2. they will share the same nfs and database.
+
+updating red hat
+
+`$ sudo yum update`
+
+![](images/wsupdate1.png)
+
+installing nfs client
+
+`$sudo yum install nfs-utils nfs4-acl-tools -y`
+
+![](images/wsinstallnfsclient1.png)
+
+creating /var/www directory
+mounting the /mnt/apps on the directory
+
+`$sudo mkdir /var/www`
+
+`$sudo mount -t nfs -o rw,nosuid <nfs-server-private-ip-address>:/mnt/apps /var/www`
+
+verifying the mount was successful
+
+`$ df -h`
+
+editing /etc/fstab to make sure the changes persist after reboot
+
+`$sudo vi /etc/fstab`
+
+![](images/wsmntappsdf2.png)
+
+![](images/wsfstab3.png)
+
+installing remi's repository, apache and php + its dependencies
+
+`$sudo yum install httpd -y`
+
+![](images/wshttpd4.png)
+
+`$sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm`
+
+![](images/wsdnf5.png)
+
+`$sudo dnf install dnf-utils http://rpms.remirepo.net/enterprise/remi-release-8.rpm`
+
+![](images/wsdnf6.png)
+
+`$sudo dnf module reset php`
+
+![](images/wsmodulereset7.png)
+
+`$sudo dnf module enable php:remi-7.4`
+
+![](images/wsmoduleremi8.png)
+
+`$sudp dnf install php php-opcache php-gd php-curl php-mysqlnd`
+
+![](images/wsphpdep9.png)
+
+`$sudo systemctl start php-fpm`
+
+`$sudo systemctl enable php-fpm`
+
+`$sudo setsebool -P httpd_execmem 1`
+
+![](images/wssystemctl10.png)
+
+verifying that apache files and directories are available on the web server in /var/www and also on the nfs server in /mnt/apps
+
+ran the ls command on both servers to be sure they have the same files
+
+`$ ls /var/www`
+
+`$ ls /mnt/apps`
+
+added a .txt file to one of the web servers and confirmed that it's available on the nfs server too
+
+`$cd /var/www`
+
+`$sudo touch test.txt`
+
+`$ls`
+
+`$ls /mnt/apps`
+
+![](images/wstest11.png)
+
+![](images/wstest111.png)
+
+repeating the steps above for /mnt/logs and /var/log/httpd
+
+`$sudo mount -t nfs -o rw,nosuid <nfs-server-private-ip-address>:/mnt/logs /var/log/httpd`
+
+verifying the mount was successful
+
+`$ df -h`
+
+editing /etc/fstab to make sure the changes persist after reboot
+
+`$sudo vi /etc/fstab`
+
+![](images/wsmnt12.png)
+
+editing fstab
+
+![](images/wslogfstab13.png)
+
+verifying that the process works on the other web servers
+
+![](images/wsmnnt12.png)
+
+![](images/wsmntt12.png)
 
