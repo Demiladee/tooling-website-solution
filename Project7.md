@@ -139,3 +139,57 @@ verifying the setup
 `$df -h`
 
 ![](images/nfsconfirm13.png)
+
+installing nfs server 
+
+`$sudo yum install nfs-utils -y`
+
+![](images/nfsutils13.png)
+
+configuring nfs
+
+`$sudo systemctl start nfs-server.service`
+
+`$sudo systemctl enable nfs-server.service`
+
+`$sudo systemctl status nfs-server.service`
+
+![](images/nfsservice14.png)
+
+setting r,w,x permissions for web servers on nfs
+
+`$sudo chown -R nobody: /mnt/apps`
+
+`$sudo chown -R nobody: /mnt/logs`
+
+`$sudo chown -R nobody: /mnt/opt`
+
+`$sudo chmod -R 777 /mnt/apps`
+
+`$sudo chmod -R 777 /mnt/logs`
+
+`$sudo chmod -R 777 /mnt/opt`
+
+`$sudo systemctl restart nfs-server.service`
+
+![](images/nfschmodown15.png)
+
+configuring access to nfs for clients within the same subnet cidr
+
+`$sudo vi /etc/exports`
+
+`$sudo exports -arv`
+
+![](images/nfsaccess16.png)
+
+checking the ports nfs is using and adding additional inbound rules
+
+`$rpcinfo -p | grep nfs`
+
+![](images/nfsexportrcp17.png)
+
+opening ports so client can access nfs:
+
+tcp 111, udp 111, tcp 2049, udp 2049
+
+![](images/nfsinbound18.png)
