@@ -1,4 +1,4 @@
-#Project 7
+# Project 7
 
 Launched 4 EC2 Instances within the same subnet using Red Hat Linux distribution, 1 for the NFS server & 3 for the Web Servers. 
 
